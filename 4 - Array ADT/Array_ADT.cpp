@@ -147,20 +147,22 @@ public:
     // Method to input array elements
     void input()
     {
+        int len;
         cout << "Enter number of elements => ";
-        cin >> length;
+        cin >> len;
 
-        if (length > size)
+        if (len > size)
         {
             cout << "Length exceeds size! Limiting to size. \n";
-            length = size;
+            len = size;
         }
 
-        cout << "Enter " << length << " elements: \n";
-        for (int i = 0; i < length; i++)
+        cout << "Enter " << len << " elements: \n";
+        for (int i = 0; i < len; i++)
         {
             cin >> A[i];
         }
+        length = len; // ✅ Only update length after successful input
     }
 
     // find max value in array
@@ -244,10 +246,74 @@ public:
         cout << endl;
     }
 
-    // Get the length of the array
-    int getLength()
+    // Insert sort
+    void insertSort(int x)
     {
-        return length;
+        int i = length - 1;
+        if (length == size)
+            return;
+        while (i >= 0 && A[i] > x)
+        {
+            A[i + 1] = A[i];
+            i--;
+        }
+        A[i + 1] = x;
+        length++;
+    }
+
+    // Check the array is sorted or not
+    bool isSorted() const
+    {
+        for (int i = 0; i < length - 1; i++)
+            if (A[i] > A[i + 1])
+                return false;
+
+        return true;
+    }
+
+    // Merge two arrays
+    Array *merge(int arr2[], int len2)
+    {
+        Array *result = new Array(length + len2);
+        int i = 0, j = 0, k = 0;
+
+        while (i < length && j < len2)
+        {
+            if (A[i] < arr2[j])
+                result->A[k++] = A[i++];
+            else
+                result->A[k++] = arr2[j++];
+        }
+
+        while (i < length)
+            result->A[k++] = A[i++];
+        while (j < len2)
+            result->A[k++] = arr2[j++];
+
+        result->length = k;
+        return result;
+    }
+
+    // Get the length of the array
+    int getLength() const { return length; }
+
+    void rearrangePositiveNegative()
+    {
+        int i = 0;
+        int j = length - 1;
+
+        while (i < j)
+        {
+            // Move forward if A[i] is negative
+            while (A[i] < 0 && i < j)
+                i++;
+            // Move j backward if A[j] is positive
+            while (A[j] >= 0 && i < j)
+                j--;
+
+            if (i < j)
+                swap(&A[i], &A[j]);
+        }
     }
 
     ~Array()
@@ -367,8 +433,30 @@ int main()
     // cout << arr.sum() << endl;
     // cout << arr.average() << endl;
 
-    arr.reverse2();
-    arr.display();
+    // arr.reverse2();
+    // arr.display();
+    // arr.insertSort(12);
+    // arr.display();
+
+    // if (arr.isSorted())
+    // {
+    //     cout << "Array is sorted";
+    // }
+    // else
+    // {
+    //     cout << "Not sorted";
+    // }
+
+    // arr.rearrangePositiveNegative();
+    // arr.display();
+
+    int arr2[] = {2, 5, 6, 7, 8, 9};
+    int len2 = sizeof(arr2) / sizeof(arr2[0]);
+
+    Array *merged = arr.merge(arr2, len2);
+    merged->display();
+
+    delete merged;
 
     return 0;
 }
