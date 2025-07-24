@@ -7,17 +7,13 @@ double e(int x, int n)
     double r;
     if (n == 0)
         return 1;
-    else
-    {
-        r = e(x, n - 1);
-        p = p * x;
-        f = f * n;
-        return r + p / f;
-    }
+    r = e(x, n - 1);
+    p = p * x;
+    f = f * n;
+    return r + p / f;
 }
 
 int main()
 {
-    cout << e(1, 10) << endl;
-    return 0;
+    cout << e(4, 15);
 }
